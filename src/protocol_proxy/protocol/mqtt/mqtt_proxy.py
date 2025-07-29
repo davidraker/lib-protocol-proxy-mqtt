@@ -92,6 +92,10 @@ class MQTTProxy(GeventProtocolProxy):
         self.mqtt.subscribe(self.subscribed_topics)
 
 
+async def run_proxy(**kwargs):
+    mp = MQTTProxy(**kwargs)
+    await mp.start()
+
 def launch_mqtt(parser: ArgumentParser) -> (ArgumentParser, Type[GeventProtocolProxy]):
     # _log.debug(f'IN LAUNCH MQTT')
     parser.add_argument('--host', type=str, default='test.mosquitto.org',
@@ -110,7 +114,7 @@ def launch_mqtt(parser: ArgumentParser) -> (ArgumentParser, Type[GeventProtocolP
     #                              help='Sets the MQTT v5.0 clean_start flag always, never or on the first'
     #                                   ' successful connect only, respectively. ')
     # parser_concrete.add_argument('--properties', type=?, ) #TODO: How/whether to do the properties argument?
-    return parser, MQTTProxy
+    return parser, run_proxy
 
 if __name__ == '__main__':
     sys.exit(launch(launch_mqtt))
