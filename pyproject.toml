@@ -31,14 +31,14 @@ ignore_missing_imports = true
 ignore_missing_imports = true
 
 [tool.poetry]
-name = "volttron-lib-mqtt-proxy"
+name = "protocol-proxy-mqtt"
 version = "2.0.0rc0"
 description = "Volttron MQTT Protocol Proxy implementation for the VOLTTRON platform.
 authors = ["The VOLTTRON Development Team <volttron@pnnl.gov>"]
 license = "Apache License 2.0"
 readme = "README.md"
-repository = "https://github.com/eclipse-volttron/volttron-lib-mqtt-proxy"
-homepage = "https://github.com/eclipse-volttron/volttron-lib-mqtt-proxy"
+repository = "https://github.com/eclipse-volttron/lib-protocol-proxy-mqtt"
+homepage = "https://github.com/eclipse-volttron/lib-protocol-proxy-mqtt"
 keywords = []
 packages = [ { include = "protocol_proxy", from = "src" } ]
 classifiers = [
