@@ -20,6 +20,7 @@ logging.basicConfig(filename='protoproxy.log', level=logging.DEBUG,
 _log = logging.getLogger(__name__)
 
 
+# TODO: Make a metaclass or abstract class to act as a mixin for a message bus profile with shared requirements.
 class MQTTProxy(GeventProtocolProxy):
     def __init__(self, manager_address, manager_port, manager_id: UUID, manager_token: UUID, token: UUID, proxy_id: UUID,
                  host: str, port: int = 1883, keepalive: int = 60, bind_address: str = '',
@@ -50,6 +51,10 @@ class MQTTProxy(GeventProtocolProxy):
                 _log.warning(f'MQTTProxy {self.proxy_name}: Connection to broker @ {host}:{port} returned code {success}')
         # _log.debug(f'{self.proxy_name}: JUST BEFORE JOINALL')
         joinall([spawn(self.main_loop), spawn(self.select_loop)])
+
+    @staticmethod
+    def topic_delimiter() -> str:
+        return '/'
 
     def main_loop(self):
         while not self._stop:
@@ -90,7 +95,6 @@ class MQTTProxy(GeventProtocolProxy):
         message = json.loads(raw_message.decode('utf8'))
         self.subscribed_topics.extend([(topic, 0) for topic in message.get('topics')])
         self.mqtt.subscribe(self.subscribed_topics)
-
 
 async def run_proxy(**kwargs):
     mp = MQTTProxy(**kwargs)
