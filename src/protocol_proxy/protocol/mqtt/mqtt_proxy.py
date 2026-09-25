@@ -11,12 +11,6 @@ manager's IPC protocol:
 """
 import sys
 
-if __name__ == '__main__':
-    # Patch only when running as the proxy process. The manager imports this module to find the
-    # class and must not have its own process monkey-patched as a side effect.
-    from gevent import monkey
-    monkey.patch_all(thread=False)
-
 import json
 import logging
 
@@ -37,6 +31,8 @@ TopicList = list[tuple[str, int]]
 
 
 class MQTTProxy(GeventProtocolProxy):
+    LAUNCHER = 'launch_mqtt'
+
     def __init__(self, *, host: str = 'localhost', port: int = 1883, keepalive: int = 60, bind_address: str = '',
                  bind_port: int = 0, client_id: str = '', username: str | None = None, password: str | None = None,
                  tls: bool = False, protocol: str = 'MQTTv311', qos: int = 0,
@@ -238,6 +234,3 @@ def launch_mqtt(parser: ArgumentParser) -> tuple[ArgumentParser, Callable]:
                         help='Maximum delay in seconds between reconnection attempts.')
     return parser, run_proxy
 
-
-if __name__ == '__main__':
-    sys.exit(launch(launch_mqtt))
