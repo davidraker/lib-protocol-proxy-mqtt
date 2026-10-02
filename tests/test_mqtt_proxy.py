@@ -53,6 +53,11 @@ def test_publish_remote_encodes_payloads(proxy):
     proxy.mqtt.publish.assert_called_with('t/2', b'text', qos=0, retain=False)
     call(proxy, proxy.handle_publish_remote, {'topic': 't/3'})
     proxy.mqtt.publish.assert_called_with('t/3', None, qos=0, retain=False)
+    # Binary payloads ride the JSON envelope hex-encoded and are published as the raw bytes.
+    call(proxy, proxy.handle_publish_remote, {'topic': 't/4', 'payload': b'\x0a\x02\x08\xff'.hex(), 'encoding': 'hex'})
+    proxy.mqtt.publish.assert_called_with('t/4', b'\x0a\x02\x08\xff', qos=0, retain=False)
+    call(proxy, proxy.handle_publish_remote, {'topic': 't/5', 'payload': 'not hex!', 'encoding': 'hex'})
+    proxy.mqtt.publish.assert_called_with('t/5', b'not hex!', qos=0, retain=False)
 
 
 def test_publish_remote_rejects_bad_requests(proxy):
