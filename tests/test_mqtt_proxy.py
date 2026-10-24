@@ -10,6 +10,9 @@ import protocol_proxy.protocol.mqtt as mqtt_package
 from protocol_proxy.protocol.mqtt import mqtt_proxy as module
 from protocol_proxy.protocol.mqtt.mqtt_proxy import MQTTProxy, launch_mqtt
 from protocol_proxy.proxy.launch import proxy_command_parser
+from pathlib import Path as _Path
+from protocol_proxy.manifest import Manifest as _Manifest
+_MANIFEST = _Path(__file__).parents[1] / 'src' / 'protocol_proxy' / 'protocol' / 'mqtt' / 'proxy.toml'   # the identity rule lives here now
 
 
 @pytest.fixture
@@ -43,7 +46,7 @@ def test_package_exposes_proxy_class_lazily():
 def test_callbacks_registered(proxy):
     assert {'PUBLISH_REMOTE', 'SUBSCRIBE_REMOTE', 'UNSUBSCRIBE_REMOTE'} <= set(proxy.callbacks)
     assert proxy.topic_delimiter() == '/'
-    assert proxy.get_unique_remote_id(('mqtt', 'a', 1)) == ('mqtt', 'a', 1)
+    assert _Manifest.load(_MANIFEST).process_key(('mqtt', 'a', 1), {}) == ('mqtt', 'a', 1)
 
 
 def test_publish_remote_encodes_payloads(proxy):

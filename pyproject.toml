@@ -39,6 +39,9 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License"
 ]
 
+[tool.poetry.plugins."protocol_proxy.manifests"]
+mqtt = "protocol_proxy.protocol.mqtt:proxy.toml"
+
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
 paho-mqtt = ">=2.1.0"

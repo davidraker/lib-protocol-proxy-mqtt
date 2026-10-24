@@ -1,0 +1,10 @@
+# Manifest for the mqtt protocol proxy: what a manager needs to launch it and key its processes.
+# Read by protocol_proxy.manifest (see PROTOCOL.md, "Manifests"); nothing in it is executable.
+
+[proxy]
+name = "mqtt"
+command = ["{python}", "-m", "protocol_proxy.proxy", "--gevent", "protocol_proxy.protocol.mqtt.mqtt_proxy:MQTTProxy"]
+header_version = 2
+
+# Without [identity] keys the caller's key is the process key as given: every remote shares one process
+# unless the caller groups them.
